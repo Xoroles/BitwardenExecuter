@@ -1,12 +1,13 @@
-using System.Text;
+ï»¿using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 
 namespace BitwardenExec;
 
 internal class TeamViewerUrlUpdaterService : BackgroundService
 {
-    // Wenn die URL fehlt, fügen wir z.B. "teamviewerapi://control?item=<ItemID>" hinzu
+    // Wenn die URL fehlt, fÃ¼gen wir z.B. "teamviewerapi://control?item=<ItemID>" hinzu
     private const string URL_SCHEME_PREFIX = "http://127.0.0.1:5000/start-teamviewer?item=";
     private readonly string? _bwSessionToken;
     private readonly Regex _digitRegex = new("^[0-9]{9,10}$");
@@ -46,7 +47,7 @@ internal class TeamViewerUrlUpdaterService : BackgroundService
                 Console.WriteLine($"[TeamViewerUrlUpdaterService] Exception: {ex}");
             }
 
-            // 2) Warten bis zum nächsten Durchlauf
+            // 2) Warten bis zum nÃ¤chsten Durchlauf
             await Task.Delay(_interval, stoppingToken);
         }
     }
@@ -67,7 +68,7 @@ internal class TeamViewerUrlUpdaterService : BackgroundService
             var itemId = itemObj["id"]?.ToString() ?? "";
             var name = itemObj["name"]?.ToString() ?? "";
 
-            // Prüfen, ob name "TV" oder "TeamViewer" enthält
+            // PrÃ¼fen, ob name "TV" oder "TeamViewer" enthÃ¤lt
             if (!_tvNameRegex.IsMatch(name))
             {
                 continue;
@@ -99,13 +100,13 @@ internal class TeamViewerUrlUpdaterService : BackgroundService
                 continue;
             }
 
-            Console.WriteLine($"Füge URL '{desiredUrl}' zu Item '{name}' ({itemId}) hinzu...");
+            Console.WriteLine($"FÃ¼ge URL '{desiredUrl}' zu Item '{name}' ({itemId}) hinzu...");
 
-            // URL anhängen
+            // URL anhÃ¤ngen
             var newUriEntry = new JObject { ["uri"] = desiredUrl };
             uris.Add(newUriEntry);
 
-            // Item zurückschreiben
+            // Item zurÃ¼ckschreiben
             var updatedJson = itemObj.ToString();
 
 
